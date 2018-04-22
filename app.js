@@ -7,12 +7,12 @@ var app = new express();
 
 var Port = process.env.PORT || 8080;
 
-var routes = require('./routes')(app,Book);
+var routes = require('./routes')(app, Book);
 
-var db = mongoose.connection();
+var db = mongoose.connection;
 
 db.on('error',console.error);
-db.once('open'() => {
+db.once('open',() => {
   console.log('Contected  mongod server');
 })
 
