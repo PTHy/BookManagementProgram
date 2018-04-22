@@ -1,10 +1,20 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var Book = require('./models/book');
 
 var app = new express();
 
 var Port = process.env.PORT || 8080;
+
+var db = mongoose.connection();
+
+db.on('error',console.error);
+db.once('open'() => {
+  console.log('Contected  mongod server');
+})
+
+mongoose.connect('mongodb://localhost/bookmanagement')
 
 app.use(bodyParser.urlencoded({extended :  true}));
 app.use(bodyParser.json());
