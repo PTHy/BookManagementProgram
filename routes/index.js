@@ -42,9 +42,7 @@ module.exports = (app, Book) => {
         res.json({result: 0});
         return;
       }
-
       res.json({result: 1});
-
     });
   });
 
@@ -67,13 +65,16 @@ module.exports = (app, Book) => {
     //method 2
 
     Book.update({_id : req.params.book_id}, {$set : req.body}, (err, output) => {
-      if(err) return res.status(500).json
+      if(err) return res.status(500).json({message : "database failure"});
+      if(!output.n) return res.status(404).json({message : "book not found"});
+
+      res.json({message : "book updated"});
     });
   });
 
   //Delete Book
   app.delete('/api/books/:book_id', (req, res) => {
-    Book.delete({_id : req.params.book_id}, (err, output) => {
+    Book.remove({_id : req.params.book_id}, (err, output) => {
         if(err) return res.status(500).json({message : "database failure"});
         res.status(204).end();
     });
