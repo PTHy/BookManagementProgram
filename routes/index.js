@@ -23,7 +23,8 @@ module.exports = (app, Book) => {
   //Get Single Book
   app.get('/api/books/:book_id', (req, res) => {
     Book.findOne({_id : req.params.book_id}, function(err, book){
-      if(err) return res.status(500).send({message : "database failure"});
+      if(err) return res.status(500).json({error : err});
+      if(!book) return res.status(404).json({error : "book is not found"});
       res.json(book);
     });
   });
@@ -49,8 +50,17 @@ module.exports = (app, Book) => {
 
   //Update The Book
   app.put('/api/books/:book_id', (req, res) => {
+    Book.findById(req.params.book_id, function(err, book){
+      if(req.body.title) book.title = req.body.title;
+      if(req.body.author) book.author = req.body.author;
+      if(req.body.published_date) book.published_date = req.body.published_date;
 
-  })
+      book.save((err) => {
+        if(err) return res.status(500).json({message : "file to update"});
+        res.json({message : "book updated"});
+      });
+    });
+  });
 
   //Delete Book
   app.delete('/api/books/:book_id', (req, res) => {
