@@ -17,13 +17,16 @@ module.exports = (app, Book) => {
       if(books.length == 0) return res.status(404).send({message : "books are not found"});
 
       res.json(books);
-    })
-  })
+    });
+  });
 
   //Get Single Book
   app.get('/api/books/:book_id', (req, res) => {
-    res.end();
-  })
+    Book.findOne({_id : req.params.book_id}, function(err, book){
+      if(err) return res.status(500).send({message : "database failure"});
+      res.json(book);
+    });
+  });
 
   //Create Book
   app.post('/api/books', function(req, res){
