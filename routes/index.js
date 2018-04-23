@@ -12,32 +12,37 @@ module.exports = (app, Book) => {
 
   //Get Book by Author
   app.get('/api/books/author/:author', (req, res) => {
+    Book.find({author: req.params.author},{_id : 0,title : 1,published_date : 1},function(err, books){
+      if(err) return res.status(500).send({message : "database failure"});
+      if(books.length == 0) return res.status(404).send({message : "books are not found"});
 
+      res.json(books);
+    })
   })
 
   //Get Single Book
   app.get('/api/books/:book_id', (req, res) => {
-
+    res.end();
   })
 
   //Create Book
   app.post('/api/books', function(req, res){
     var book = new Book();
-    book.title = req.body.name;
+    book.title = req.body.title;
     book.author = req.body.author;
     book.published_date = new Date(req.body.published_date);
 
     book.save(function(err){
-        if(err){
-            console.error(err);
-            res.json({result: 0});
-            return;
-        }
+      if(err){
+        console.error(err);
+        res.json({result: 0});
+        return;
+      }
 
-        res.json({result: 1});
+      res.json({result: 1});
 
     });
-});
+  });
 
   //Update The Book
   app.put('/api/books/:book_id', (req, res) => {
