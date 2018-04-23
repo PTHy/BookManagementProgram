@@ -3,11 +3,9 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Book = require('./models/book');
 
-var app = new express();
+var app = express();
 
-var Port = process.env.PORT || 8080;
-
-var routes = require('./routes')(app, Book);
+var Port = process.env.PORT || 3000;
 
 var db = mongoose.connection;
 
@@ -20,6 +18,8 @@ mongoose.connect('mongodb://localhost/bookmanagement')
 
 app.use(bodyParser.urlencoded({extended :  true}));
 app.use(bodyParser.json());
+
+var routes = require('./routes')(app, Book);
 
 var server = app.listen(Port, () => {
   console.log('Express Sever is running on '+Port);
